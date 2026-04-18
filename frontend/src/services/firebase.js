@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -10,5 +10,24 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+const missingConfig = Object.entries(firebaseConfig).filter(([, value]) => !value).map(([key]) => key);
+if (missingConfig.length > 0) {
+  console.error('Firebase configuration is incomplete:', missingConfig);
+  throw new Error(
+    `Firebase configuration is incomplete. Check frontend/.env.local and restart dev server. Missing: ${missingConfig.join(', ')}`
+  );
+}
+
+if (process.env.NODE_ENV === 'development') {
+  console.debug('Firebase config loaded:', {
+    apiKey: firebaseConfig.apiKey ? '***' : '<missing>',
+    authDomain: firebaseConfig.authDomain,
+    projectId: firebaseConfig.projectId,
+    storageBucket: firebaseConfig.storageBucket,
+    messagingSenderId: firebaseConfig.messagingSenderId,
+    appId: firebaseConfig.appId,
+  });
+}
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
