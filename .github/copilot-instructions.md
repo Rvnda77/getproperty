@@ -31,5 +31,5 @@ Follow development best practices.
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the plan at specs/001-direct-property-platform/plan.md
 <!-- SPECKIT END -->
